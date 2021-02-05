@@ -36,15 +36,15 @@ namespace Microsoft.Extensions.DependencyInjection
             var builder = services.AddIdentityServerBuilder();
 
             builder
-                .AddRequiredPlatformServices()
-                .AddCookieAuthentication()
-                .AddCoreServices()
-                .AddDefaultEndpoints()
-                .AddPluggableServices()
-                .AddValidators()
-                .AddResponseGenerators()
-                .AddDefaultSecretParsers()
-                .AddDefaultSecretValidators();
+                .AddRequiredPlatformServices()  //注入平台服务
+                .AddCookieAuthentication()      //注入Cookie服务
+                .AddCoreServices()              //注入核心服务
+                .AddDefaultEndpoints()          //注入接口
+                .AddPluggableServices()         //注入可插拔服务
+                .AddValidators()                //注入校验类
+                .AddResponseGenerators()        //注入响应生成类
+                .AddDefaultSecretParsers()      //注入默认密钥解析器
+                .AddDefaultSecretValidators();  //注入默认密钥校验
 
             // provide default in-memory implementation, not suitable for most production scenarios
             builder.AddInMemoryPersistedGrants();
