@@ -79,6 +79,7 @@ namespace Microsoft.Extensions.DependencyInjection
         /// <returns></returns>
         public static IIdentityServerBuilder AddDefaultEndpoints(this IIdentityServerBuilder builder)
         {
+            //注入所有默认接口，包括接口名称和地址。请求进来之后，路由类EndpointRouter通过路由来寻找匹配的处理器
             builder.Services.AddTransient<IEndpointRouter, EndpointRouter>();
 
             //认证回调接口
@@ -128,6 +129,7 @@ namespace Microsoft.Extensions.DependencyInjection
 
         /// <summary>
         /// Adds the core services.
+        /// 注入核心服务
         /// </summary>
         /// <param name="builder">The builder.</param>
         /// <returns></returns>
@@ -154,6 +156,7 @@ namespace Microsoft.Extensions.DependencyInjection
 
         /// <summary>
         /// Adds the pluggable services.
+        /// 注入可插拔服务
         /// </summary>
         /// <param name="builder">The builder.</param>
         /// <returns></returns>
@@ -204,6 +207,7 @@ namespace Microsoft.Extensions.DependencyInjection
 
         /// <summary>
         /// Adds the validators.
+        /// 注入校验类
         /// </summary>
         /// <param name="builder">The builder.</param>
         /// <returns></returns>
@@ -233,6 +237,7 @@ namespace Microsoft.Extensions.DependencyInjection
 
         /// <summary>
         /// Adds the response generators.
+        /// 注入生成响应类
         /// </summary>
         /// <param name="builder">The builder.</param>
         /// <returns></returns>
@@ -252,6 +257,7 @@ namespace Microsoft.Extensions.DependencyInjection
 
         /// <summary>
         /// Adds the default secret parsers.
+        /// 注入默认密钥解析器
         /// </summary>
         /// <param name="builder">The builder.</param>
         /// <returns></returns>
@@ -265,6 +271,7 @@ namespace Microsoft.Extensions.DependencyInjection
 
         /// <summary>
         /// Adds the default secret validators.
+        /// 注入默认密钥校验
         /// </summary>
         /// <param name="builder">The builder.</param>
         /// <returns></returns>
