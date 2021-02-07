@@ -1,4 +1,4 @@
-﻿// Copyright (c) Brock Allen & Dominick Baier. All rights reserved.
+// Copyright (c) Brock Allen & Dominick Baier. All rights reserved.
 // Licensed under the Apache License, Version 2.0. See LICENSE in the project root for license information.
 
 using System;
@@ -56,6 +56,16 @@ namespace IdentityServer4.Endpoints
 
         public abstract Task<IEndpointResult> ProcessAsync(HttpContext context);
 
+        /// <summary>
+        /// 认证处理流程
+        /// 1.校验所有参数
+        /// 2.认证接口consent入参为null,不需要处理用户交互判断
+        /// 3.生成返回报文
+        /// </summary>
+        /// <param name="parameters"></param>
+        /// <param name="user"></param>
+        /// <param name="consent"></param>
+        /// <returns></returns>
         internal async Task<IEndpointResult> ProcessAuthorizeRequestAsync(NameValueCollection parameters, ClaimsPrincipal user, ConsentResponse consent)
         {
             if (user != null)

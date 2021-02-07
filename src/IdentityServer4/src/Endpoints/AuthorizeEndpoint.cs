@@ -30,6 +30,11 @@ namespace IdentityServer4.Endpoints
         {
         }
 
+        /// <summary>
+        /// 认证处理
+        /// </summary>
+        /// <param name="context"></param>
+        /// <returns></returns>
         public override async Task<IEndpointResult> ProcessAsync(HttpContext context)
         {
             Logger.LogDebug("Start authorize request");
