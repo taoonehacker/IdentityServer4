@@ -26,6 +26,7 @@ namespace IdentityServer4.Endpoints
         private readonly IAuthorizeResponseGenerator _authorizeResponseGenerator;
 
         private readonly IEventService _events;
+
         private readonly IdentityServerOptions _options;
 
         private readonly IAuthorizeInteractionResponseGenerator _interactionGenerator;
