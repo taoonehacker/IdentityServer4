@@ -13,6 +13,9 @@ using Microsoft.Extensions.Logging;
 
 namespace IdentityServer4.Endpoints
 {
+    /// <summary>
+    /// OIDC服务配置信息接口
+    /// </summary>
     internal class DiscoveryEndpoint : IEndpointHandler
     {
         private readonly ILogger _logger;
@@ -31,11 +34,17 @@ namespace IdentityServer4.Endpoints
             _responseGenerator = responseGenerator;
         }
 
+        /// <summary>
+        /// OIDC服务配置信息处理
+        /// </summary>
+        /// <param name="context"></param>
+        /// <returns></returns>
         public async Task<IEndpointResult> ProcessAsync(HttpContext context)
         {
             _logger.LogTrace("Processing discovery request.");
 
             // validate HTTP
+            // OIDC服务配置信息处理只支持Get的请求方式
             if (!HttpMethods.IsGet(context.Request.Method))
             {
                 _logger.LogWarning("Discovery endpoint only supports GET requests");
@@ -44,13 +53,16 @@ namespace IdentityServer4.Endpoints
 
             _logger.LogDebug("Start discovery request");
 
+            // 如果配置不允许 返回404
             if (!_options.Endpoints.EnableDiscoveryEndpoint)
             {
                 _logger.LogInformation("Discovery endpoint disabled. 404.");
                 return new StatusCodeResult(HttpStatusCode.NotFound);
             }
 
+            // 根目录
             var baseUrl = context.GetIdentityServerBaseUrl().EnsureTrailingSlash();
+            // 发布的Uri
             var issuerUri = context.GetIdentityServerIssuerUri();
 
             // generate response

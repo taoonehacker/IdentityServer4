@@ -207,6 +207,9 @@ namespace IdentityServer4
             public const string UserInfo = "Userinfo";
         }
 
+        /// <summary>
+        /// OIDC协议路由路径
+        /// </summary>
         public static class ProtocolRoutePaths
         {
             public const string ConnectPathPrefix       = "connect";

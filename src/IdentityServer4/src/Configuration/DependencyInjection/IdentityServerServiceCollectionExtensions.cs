@@ -1,4 +1,4 @@
-﻿// Copyright (c) Brock Allen & Dominick Baier. All rights reserved.
+// Copyright (c) Brock Allen & Dominick Baier. All rights reserved.
 // Licensed under the Apache License, Version 2.0. See LICENSE in the project root for license information.
 
 
@@ -33,6 +33,15 @@ namespace Microsoft.Extensions.DependencyInjection
         /// <returns></returns>
         public static IIdentityServerBuilder AddIdentityServer(this IServiceCollection services)
         {
+            // 依赖注入的入口
+            // 主要流程：
+            // 1.注入EndPoints,
+            // 2.客户端http请求 
+            // 3.EndPointRouter寻找匹配接口
+            // 4.从容器中得到接口对应的处理类IEndPointHandler
+            // 5.IEndPointHandler处理完毕返回IEndPointResult
+            // 6.IEndPointResult执行完毕返回报文
+
             var builder = services.AddIdentityServerBuilder();
 
             builder
