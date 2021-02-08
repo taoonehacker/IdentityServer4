@@ -62,14 +62,17 @@ namespace IdentityServer4.ResponseHandling
             Logger.LogDebug("Creating userinfo response");
 
             // extract scopes and turn into requested claim types
+            // 从校验结果中获取Scope声明值
             var scopes = validationResult.TokenValidationResult.Claims.Where(c => c.Type == JwtClaimTypes.Scope).Select(c => c.Value);
 
+            // 查找scope值关联的IdentityResource(身份资源)及其关联的所有claim 得到的结果就是用户请求的所有claim
             var validatedResources = await GetRequestedResourcesAsync(scopes);
             var requestedClaimTypes = await GetRequestedClaimTypesAsync(validatedResources);
 
             Logger.LogDebug("Requested claim types: {claimTypes}", requestedClaimTypes.ToSpaceSeparatedString());
 
             // call profile service
+            // 调用DefaultProfileService的GetProfileDataAsync方法,返回校验结果claim与用户请求的交集
             var context = new ProfileDataRequestContext(
                 validationResult.Subject,
                 validationResult.TokenValidationResult.Client,
@@ -93,6 +96,7 @@ namespace IdentityServer4.ResponseHandling
                 Logger.LogInformation("Profile service returned the following claim types: {types}", profileClaims.Select(c => c.Type).ToSpaceSeparatedString());
             }
 
+            //如果claim集合中没有sub,取校验结果中的sub值.如果IPorfileService返回的sub声明值与校验结果的sub值不一致则抛出异常
             var subClaim = outgoingClaims.SingleOrDefault(x => x.Type == JwtClaimTypes.Subject);
             if (subClaim == null)
             {
@@ -103,7 +107,7 @@ namespace IdentityServer4.ResponseHandling
                 Logger.LogError("Profile service returned incorrect subject value: {sub}", subClaim);
                 throw new InvalidOperationException("Profile service returned incorrect subject value");
             }
-
+            //返回claim集合
             return outgoingClaims.ToClaimsDictionary();
         }
 
