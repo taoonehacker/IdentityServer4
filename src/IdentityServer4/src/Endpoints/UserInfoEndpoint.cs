@@ -33,9 +33,9 @@ namespace IdentityServer4.Endpoints
         /// <param name="responseGenerator">The response generator.</param>
         /// <param name="logger">The logger.</param>
         public UserInfoEndpoint(
-            BearerTokenUsageValidator tokenUsageValidator, 
-            IUserInfoRequestValidator requestValidator, 
-            IUserInfoResponseGenerator responseGenerator, 
+            BearerTokenUsageValidator tokenUsageValidator,
+            IUserInfoRequestValidator requestValidator,
+            IUserInfoResponseGenerator responseGenerator,
             ILogger<UserInfoEndpoint> logger)
         {
             _tokenUsageValidator = tokenUsageValidator;
@@ -51,6 +51,7 @@ namespace IdentityServer4.Endpoints
         /// <returns></returns>
         public async Task<IEndpointResult> ProcessAsync(HttpContext context)
         {
+            //只支持Get或者Post请求方式
             if (!HttpMethods.IsGet(context.Request.Method) && !HttpMethods.IsPost(context.Request.Method))
             {
                 _logger.LogWarning("Invalid HTTP method for userinfo endpoint.");
@@ -65,6 +66,7 @@ namespace IdentityServer4.Endpoints
             _logger.LogDebug("Start userinfo request");
 
             // userinfo requires an access token on the request
+            // 校验通行令牌
             var tokenUsageResult = await _tokenUsageValidator.ValidateAsync(context);
             if (tokenUsageResult.TokenFound == false)
             {
@@ -75,6 +77,7 @@ namespace IdentityServer4.Endpoints
             }
 
             // validate the request
+            // 校验请求参数
             _logger.LogTrace("Calling into userinfo request validator: {type}", _requestValidator.GetType().FullName);
             var validationResult = await _requestValidator.ValidateRequestAsync(tokenUsageResult.Token);
 

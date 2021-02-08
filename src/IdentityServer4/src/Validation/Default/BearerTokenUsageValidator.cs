@@ -1,4 +1,4 @@
-﻿// Copyright (c) Brock Allen & Dominick Baier. All rights reserved.
+// Copyright (c) Brock Allen & Dominick Baier. All rights reserved.
 // Licensed under the Apache License, Version 2.0. See LICENSE in the project root for license information.
 
 
@@ -34,6 +34,7 @@ namespace IdentityServer4.Validation
         /// <returns></returns>
         public async Task<BearerTokenUsageValidationResult> ValidateAsync(HttpContext context)
         {
+            //从请求头中找到Authorization并获取到Bearer Token的参数值
             var result = ValidateAuthorizationHeader(context);
             if (result.TokenFound)
             {
@@ -41,6 +42,7 @@ namespace IdentityServer4.Validation
                 return result;
             }
 
+            //如果content-type为表单类型，尝试从表单中获取access_token参数值
             if (context.Request.HasApplicationFormContentType())
             {
                 result = await ValidatePostBodyAsync(context);
@@ -50,7 +52,7 @@ namespace IdentityServer4.Validation
                     return result;
                 }
             }
-
+            //如果两处都找不到则返回校验失败结果
             _logger.LogDebug("Bearer token not found");
             return new BearerTokenUsageValidationResult();
         }

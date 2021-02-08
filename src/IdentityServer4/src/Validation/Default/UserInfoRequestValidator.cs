@@ -1,4 +1,4 @@
-﻿// Copyright (c) Brock Allen & Dominick Baier. All rights reserved.
+// Copyright (c) Brock Allen & Dominick Baier. All rights reserved.
 // Licensed under the Apache License, Version 2.0. See LICENSE in the project root for license information.
 
 
@@ -47,6 +47,7 @@ namespace IdentityServer4.Validation
         public async Task<UserInfoRequestValidationResult> ValidateRequestAsync(string accessToken)
         {
             // the access token needs to be valid and have at least the openid scope
+            // accessToken 必须包含openid声明的权限
             var tokenResult = await _tokenValidator.ValidateAccessTokenAsync(
                 accessToken,
                 IdentityServerConstants.StandardScopes.OpenId);
@@ -61,6 +62,7 @@ namespace IdentityServer4.Validation
             }
 
             // the token must have a one sub claim
+            // 必须包含sub(subject) 代表用户唯一标识
             var subClaim = tokenResult.Claims.SingleOrDefault(c => c.Type == JwtClaimTypes.Subject);
             if (subClaim == null)
             {
@@ -74,10 +76,13 @@ namespace IdentityServer4.Validation
             }
 
             // create subject from incoming access token
+            // 收集accessToken所有claim,移除一下与用户信息无关的claim
+            // 用筛选后的claim创建名为userinfo的principal
             var claims = tokenResult.Claims.Where(x => !Constants.Filters.ProtocolClaimsFilter.Contains(x.Type));
             var subject = Principal.Create("UserInfo", claims.ToArray());
 
             // make sure user is still active
+            // 调用IProfileServicede IsActiveAsync方法判断用户是否启用,不是启用状态,则返回invalid_token错误
             var isActiveContext = new IsActiveContext(subject, tokenResult.Client, IdentityServerConstants.ProfileIsActiveCallers.UserInfoRequestValidation);
             await _profile.IsActiveAsync(isActiveContext);
 
@@ -91,7 +96,7 @@ namespace IdentityServer4.Validation
                     Error = OidcConstants.ProtectedResourceErrors.InvalidToken
                 };
             }
-
+            //返回验证成功结果对象,包括之前构建的Principal
             return new UserInfoRequestValidationResult
             {
                 IsError = false,
