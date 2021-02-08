@@ -53,6 +53,7 @@ namespace IdentityServer4.Endpoints
 
         /// <summary>
         /// Processes the request.
+        /// 必须使用POST方法请求,使用x-www-form-urlencoded方式序列化参数
         /// </summary>
         /// <param name="context">The HTTP context.</param>
         /// <returns></returns>
@@ -70,6 +71,16 @@ namespace IdentityServer4.Endpoints
             return await ProcessTokenRequestAsync(context);
         }
 
+        /// <summary>
+        /// 处理流程
+        /// 1.验证client是否颁发了密钥
+        /// 2.验证为该客户端颁发了授权码
+        /// 3.验证授权码有效性
+        /// 4.如果可能的话,验证授权码是否被使用过
+        /// 5.验证redirect_uri与发起认证请求时的值是否一致
+        /// </summary>
+        /// <param name="context"></param>
+        /// <returns></returns>
         private async Task<IEndpointResult> ProcessTokenRequestAsync(HttpContext context)
         {
             _logger.LogDebug("Start token request.");
